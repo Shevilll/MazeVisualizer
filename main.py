@@ -7,9 +7,12 @@ import pygame
 # Press c to clear the display
 # Left Click to place Nodes
 # Right Click to remove Nodes
-# Press r to generate random maze
+# Press r to generate random maze of barriers
 # Press g for greedy best first search
 # Press a for astar
+# Press 1 to off/on walls
+# Press 2 to off/on water
+# Press 3 to off/on deepwater
 
 # window settings
 WIDTH = 800
@@ -29,6 +32,9 @@ def main():
 
     start = None
     end = None
+    wall = False
+    water = False
+    deepwater = False
 
     run = True
     while run:
@@ -47,7 +53,12 @@ def main():
                 elif start and not end and start != node:
                     node.make_end()
                     end = node
-
+                elif start and end and start != end and end != node and wall:
+                    node.make_wall()
+                elif start and end and start != end and end != node and water:
+                    node.make_water()
+                elif start and end and start != end and end != node and deepwater:
+                    node.make_deepwater()
                 elif start and end and start != node and end != node:
                     node.make_barrier()
             elif pygame.mouse.get_pressed()[2]:
@@ -61,6 +72,21 @@ def main():
                     end = None
 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_1:
+                    wall = not wall
+                    water = False
+                    deepwater = False
+
+                if event.key == pygame.K_2:
+                    wall = False
+                    water = not water
+                    deepwater = False
+
+                if event.key == pygame.K_3:
+                    wall = False
+                    water = False
+                    deepwater = not deepwater
+
                 if event.key == pygame.K_c:
                     from maze.maze import reset_maze
 

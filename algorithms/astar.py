@@ -10,19 +10,22 @@ def heuristic(x1, y1, x2, y2):
 
 
 def astar(grid: List[List[Node]], start: Node, end: Node, draw):
+    """Care about weighted maze and gives shortest path"""
     for i in grid:
         for node in i:
-            if node.is_visited() or node.is_path() or node.will_visit():
+            if (
+                node.is_visited() or node.is_path() or node.will_visit()
+            ) and not node.is_weighted():
                 node.reset()
         draw()
     p_queue = PriorityQueue()
-
+    count = 0
     g_scores = {node: float("inf") for row in grid for node in row}
-    g_scores[start] = heuristic(start.row, start.col, end.row, end.col)
+    g_scores[start] = 0
     f_scores = {node: float("inf") for row in grid for node in row}
     f_scores[start] = heuristic(start.row, start.col, end.row, end.col)
 
-    p_queue.put((heuristic(start.row, start.col, end.row, end.col), start))
+    p_queue.put((0, count, start))
     visited = {(start.row, start.col): None}
     while not p_queue.empty():
         for event in pygame.event.get():
@@ -31,7 +34,7 @@ def astar(grid: List[List[Node]], start: Node, end: Node, draw):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     return
-        curr: Node = p_queue.get()[1]
+        curr: Node = p_queue.get()[2]
 
         x, y = curr.row, curr.col
         if grid[x][y] == end:
@@ -40,23 +43,26 @@ def astar(grid: List[List[Node]], start: Node, end: Node, draw):
                 x, y = visited[(x, y)]
                 path.append(grid[x][y])
             for i in path[1 : len(path) - 1]:
-                i.make_path()
+                if not i.is_weighted():
+                    i.make_path()
                 draw()
+            print(
+                f"A*\nPath Length: {len(path)}\nTotal Nodes Visited: {len(visited)}\n"
+            )
             return
-        if curr != start:
+        if curr != start and not curr.is_weighted():
             curr.make_visited()
 
         curr.update_neighbours(grid)
         for i in curr.neighbours:
-            tentative_g_score = g_scores[curr] + 1
+            tentative_g_score = g_scores[curr] + i.weight
             if tentative_g_score < g_scores[i]:
                 g_scores[i] = tentative_g_score
-                f_scores[i] = tentative_g_score + heuristic(
-                    i.row, i.col, end.row, end.col
-                )
+                f_scores[i] = g_scores[i] + heuristic(i.row, i.col, end.row, end.col)
                 if (i.row, i.col) not in visited:
+                    count += 1
                     visited[(i.row, i.col)] = (x, y)
-                    p_queue.put((f_scores[i], i))
-                    if i != start and i != end:
+                    p_queue.put((f_scores[i], count, i))
+                    if i != start and i != end and not i.is_weighted():
                         i.make_will_visit()
         draw()

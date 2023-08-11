@@ -10,9 +10,15 @@ def heuristic(x1, y1, x2, y2):
 
 
 def greedy_best_first_search(grid: List[List[Node]], start: Node, end: Node, draw):
+    """Care about weighted maze and doesn't gives shortest path"""
     for i in grid:
         for node in i:
-            if node.is_visited() or node.is_path() or node.will_visit():
+            if (
+                node.is_visited()
+                or node.is_path()
+                or node.will_visit()
+                and not node.is_weighted()
+            ):
                 node.reset()
         draw()
     p_queue = PriorityQueue()
@@ -34,17 +40,21 @@ def greedy_best_first_search(grid: List[List[Node]], start: Node, end: Node, dra
                 x, y = visited[(x, y)]
                 path.append(grid[x][y])
             for i in path[1 : len(path) - 1]:
-                i.make_path()
+                if not i.is_weighted():
+                    i.make_path()
                 draw()
+            print(
+                f"Greedy Best First Search\nPath Length: {len(path)}\nTotal Nodes Visited: {len(visited)}\n"
+            )
             return
-        if curr != start:
+        if curr != start and not curr.is_weighted():
             curr.make_visited()
 
         curr.update_neighbours(grid)
         for i in curr.neighbours:
             if (i.row, i.col) not in visited:
-                if i != start and i != end:
+                if i != start and i != end and not i.is_weighted():
                     i.make_will_visit()
-                p_queue.put((heuristic(i.row, i.col, end.row, end.col), i))
+                p_queue.put((heuristic(i.row, i.col, end.row, end.col) + i.weight, i))
                 visited[(i.row, i.col)] = (x, y)
         draw()

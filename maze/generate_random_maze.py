@@ -11,6 +11,8 @@ def generate_random_maze(
     end: Node,
     reset_maze,
 ):
+    """Generates maze only of barrier"""
+
     def generate_maze(make_grid):
         grid: List[List[Node]] = make_grid()
         for i in grid:

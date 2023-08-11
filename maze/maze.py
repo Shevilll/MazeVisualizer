@@ -5,14 +5,14 @@ from main import win, WIDTH, HEIGHT
 # colors
 RED = (255, 0, 0)  # End
 GREEN = (0, 255, 0)  # Start
-BLUE = (0, 0, 255)
+BLUE = (0, 0, 255)  # Deep water
 YELLOW = (255, 255, 0)  # Visited
-WHITE = (255, 255, 255)  # Background
+WHITE = (255, 255, 255)  # Background / Air
 BLACK = (0, 0, 0)  # Barrier
 PURPLE = (128, 0, 128)  # Path
 ORANGE = (255, 165, 0)  # Plan to visit
-GREY = (128, 128, 128)
-TURQUOISE = (64, 224, 208)
+GREY = (128, 128, 128)  # Wall
+TURQUOISE = (64, 224, 208)  # Water
 
 
 class Node:
@@ -25,6 +25,7 @@ class Node:
         y_gap: int,
         total_rows: int,
         total_cols: int,
+        weight: int = 1,
     ) -> None:
         self.win = win
         self.row = row
@@ -37,27 +38,32 @@ class Node:
         self.total_rows = total_rows
         self.total_cols = total_cols
         self.neighbours: List[Node] = []
+        self.weight = weight
 
     def is_barrier(self):
         return self.color == BLACK
 
     def make_barrier(self):
         self.color = BLACK
+        self.weight = float("inf")
 
     def is_start(self):
         return self.color == GREEN
 
     def make_start(self):
         self.color = GREEN
+        self.weight = 0
 
     def is_end(self):
         return self.color == RED
 
     def make_end(self):
         self.color = RED
+        self.weight = 0
 
     def reset(self):
         self.color = WHITE
+        self.weight = 1
 
     def make_path(self):
         self.color = PURPLE
@@ -76,6 +82,30 @@ class Node:
 
     def make_will_visit(self):
         self.color = ORANGE
+
+    def make_wall(self):
+        self.color = GREY
+        self.weight = 20
+
+    def is_wall(self):
+        return self.color == GREY
+
+    def make_water(self):
+        self.color = TURQUOISE
+        self.weight = 50
+
+    def is_water(self):
+        return self.color == TURQUOISE
+
+    def make_deepwater(self):
+        self.color = BLUE
+        self.weight = 100
+
+    def is_deepwater(self):
+        return self.color == BLUE
+
+    def is_weighted(self):
+        return self.is_wall() or self.is_deepwater() or self.is_water()
 
     def draw(self):
         pygame.draw.rect(
