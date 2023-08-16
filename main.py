@@ -13,6 +13,8 @@ import pygame
 # Press 1 to off/on walls
 # Press 2 to off/on water
 # Press 3 to off/on deepwater
+# Press spacebar to off/on diagonal_neighbours
+# Press j for dijkstra
 
 # window settings
 WIDTH = 800
@@ -35,6 +37,7 @@ def main():
     wall = False
     water = False
     deepwater = False
+    diagonal = False
 
     run = True
     while run:
@@ -72,6 +75,9 @@ def main():
                     end = None
 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    diagonal = not diagonal
+
                 if event.key == pygame.K_1:
                     wall = not wall
                     water = False
@@ -125,6 +131,7 @@ def main():
                         start,
                         end,
                         lambda: draw(total_rows, total_cols, grid),
+                        diagonal,
                     )
                 if event.key == pygame.K_b and start and end:
                     from algorithms.breadth_first_search import breadth_first_search
@@ -134,6 +141,7 @@ def main():
                         start,
                         end,
                         lambda: draw(total_rows, total_cols, grid),
+                        diagonal,
                     )
 
                 if event.key == pygame.K_g and start and end:
@@ -146,6 +154,7 @@ def main():
                         start,
                         end,
                         lambda: draw(total_rows, total_cols, grid),
+                        diagonal,
                     )
                 if event.key == pygame.K_a and start and end:
                     from algorithms.astar import astar
@@ -155,6 +164,17 @@ def main():
                         start,
                         end,
                         lambda: draw(total_rows, total_cols, grid),
+                        diagonal,
+                    )
+                if event.key == pygame.K_j and start and end:
+                    from algorithms.dijkstra import dijkstra
+
+                    dijkstra(
+                        grid,
+                        start,
+                        end,
+                        lambda: draw(total_rows, total_cols, grid),
+                        diagonal,
                     )
         draw(total_rows, total_cols, grid)
     pygame.quit()

@@ -9,7 +9,9 @@ def heuristic(x1, y1, x2, y2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
-def greedy_best_first_search(grid: List[List[Node]], start: Node, end: Node, draw):
+def greedy_best_first_search(
+    grid: List[List[Node]], start: Node, end: Node, draw, diagonal
+):
     """Care about weighted maze and doesn't gives shortest path"""
     for i in grid:
         for node in i:
@@ -50,7 +52,7 @@ def greedy_best_first_search(grid: List[List[Node]], start: Node, end: Node, dra
         if curr != start and not curr.is_weighted():
             curr.make_visited()
 
-        curr.update_neighbours(grid)
+        curr.update_neighbours(grid, diagonal)
         for i in curr.neighbours:
             if (i.row, i.col) not in visited:
                 if i != start and i != end and not i.is_weighted():

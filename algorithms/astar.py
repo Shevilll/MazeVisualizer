@@ -9,7 +9,7 @@ def heuristic(x1, y1, x2, y2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
-def astar(grid: List[List[Node]], start: Node, end: Node, draw):
+def astar(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
     """Care about weighted maze and gives shortest path"""
     for i in grid:
         for node in i:
@@ -53,7 +53,7 @@ def astar(grid: List[List[Node]], start: Node, end: Node, draw):
         if curr != start and not curr.is_weighted():
             curr.make_visited()
 
-        curr.update_neighbours(grid)
+        curr.update_neighbours(grid, diagonal)
         for i in curr.neighbours:
             tentative_g_score = g_scores[curr] + i.weight
             if tentative_g_score < g_scores[i]:

@@ -4,7 +4,9 @@ from typing import List
 from maze.maze import Node
 
 
-def breadth_first_search(grid: List[List[Node]], start: Node, end: Node, draw):
+def breadth_first_search(
+    grid: List[List[Node]], start: Node, end: Node, draw, diagonal
+):
     """Doesn't care about weighted maze and gives shortest path"""
     for i in grid:
         for node in i:
@@ -44,7 +46,7 @@ def breadth_first_search(grid: List[List[Node]], start: Node, end: Node, draw):
         if curr != start and not curr.is_weighted():
             curr.make_visited()
 
-        curr.update_neighbours(grid)
+        curr.update_neighbours(grid, diagonal)
         for i in curr.neighbours:
             if (i.row, i.col) not in visited:
                 if i != start and i != end and not i.is_weighted():

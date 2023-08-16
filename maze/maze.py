@@ -112,7 +112,7 @@ class Node:
             self.win, self.color, (self.x_coord, self.y_coord, self.x_gap, self.y_gap)
         )
 
-    def update_neighbours(self, grid: List[List[Type["Node"]]]):
+    def update_neighbours(self, grid: List[List[Type["Node"]]], diagonal):
         self.neighbours = []
 
         # up
@@ -136,6 +136,38 @@ class Node:
             and not grid[self.row + 1][self.col].is_barrier()
         ):
             self.neighbours.append(grid[self.row + 1][self.col])
+        if diagonal:
+            # upleft
+            if (
+                self.row > 0
+                and self.col > 0
+                and not grid[self.row - 1][self.col - 1].is_barrier()
+            ):
+                self.neighbours.append(grid[self.row - 1][self.col - 1])
+
+            # downleft
+            if (
+                self.col > 0
+                and self.row < self.total_rows - 1
+                and not grid[self.row + 1][self.col - 1].is_barrier()
+            ):
+                self.neighbours.append(grid[self.row + 1][self.col - 1])
+
+            # upright
+            if (
+                self.col < self.total_cols - 1
+                and self.row > 0
+                and not grid[self.row - 1][self.col + 1].is_barrier()
+            ):
+                self.neighbours.append(grid[self.row - 1][self.col + 1])
+
+            # downright
+            if (
+                self.col < self.total_cols - 1
+                and self.row < self.total_rows - 1
+                and not grid[self.row + 1][self.col + 1].is_barrier()
+            ):
+                self.neighbours.append(grid[self.row + 1][self.col + 1])
 
     def __lt__(self, other):
         return False
