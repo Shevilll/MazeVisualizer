@@ -1,1 +1,3 @@
 # MazeVisualizer
+
+The code implements a maze visualization tool using Pygame. It allows users to interactively create and manipulate mazes by placing start and end points, as well as various obstacles like walls, water, and deep water. Users can generate random mazes, toggle different types of obstacles, and choose from different search algorithms to find paths through the maze, including Depth First Search, Breadth First Search, Greedy Best First Search, A\* Search, and Dijkstra's Algorithm. The program provides visual feedback through animations and updates the display to reflect changes made by the user or the algorithms.
