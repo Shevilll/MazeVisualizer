@@ -9,7 +9,7 @@ def heuristic(x1, y1, x2, y2):
     return abs(x1 - x2) + abs(y1 - y2)
 
 
-def astar(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
+def astar(grid: List[List[Node]], start: Node, end: Node, draw, diagonal, animations):
     """Care about weighted maze and gives shortest path"""
     for i in grid:
         for node in i:
@@ -17,7 +17,8 @@ def astar(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
                 node.is_visited() or node.is_path() or node.will_visit()
             ) and not node.is_weighted():
                 node.reset()
-        draw()
+        if animations:
+            draw()
     p_queue = PriorityQueue()
     count = 0
     g_scores = {node: float("inf") for row in grid for node in row}
@@ -45,7 +46,8 @@ def astar(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
             for i in path[1 : len(path) - 1]:
                 if not i.is_weighted():
                     i.make_path()
-                draw()
+                if animations:
+                    draw()
             print(
                 f"A*\nPath Length: {len(path)}\nTotal Nodes Visited: {len(visited)}\n"
             )
@@ -65,4 +67,5 @@ def astar(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
                     p_queue.put((f_scores[i], count, i))
                     if i != start and i != end and not i.is_weighted():
                         i.make_will_visit()
-        draw()
+        if animations:
+            draw()

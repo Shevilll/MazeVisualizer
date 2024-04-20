@@ -4,7 +4,9 @@ from queue import PriorityQueue
 from typing import List
 
 
-def dijkstra(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
+def dijkstra(
+    grid: List[List[Node]], start: Node, end: Node, draw, diagonal, animations
+):
     """Care about weighted maze and gives shortest path"""
     for i in grid:
         for node in i:
@@ -12,7 +14,8 @@ def dijkstra(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
                 node.is_visited() or node.is_path() or node.will_visit()
             ) and not node.is_weighted():
                 node.reset()
-        draw()
+        if animations:
+            draw()
     p_queue = PriorityQueue()
     dist = {node: float("inf") for row in grid for node in row}
     dist[start] = 0
@@ -37,7 +40,8 @@ def dijkstra(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
             for i in path[1 : len(path) - 1]:
                 if not i.is_weighted():
                     i.make_path()
-                draw()
+                if animations:
+                    draw()
             print(
                 f"Dijsktra\nPath Length: {len(path)}\nTotal Nodes Visited: {len(visited)}\n"
             )
@@ -55,4 +59,5 @@ def dijkstra(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
                     p_queue.put((newdist, i))
                     if i != start and i != end and not i.is_weighted():
                         i.make_will_visit()
-        draw()
+        if animations:
+            draw()

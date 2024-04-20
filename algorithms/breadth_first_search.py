@@ -5,7 +5,7 @@ from maze.maze import Node
 
 
 def breadth_first_search(
-    grid: List[List[Node]], start: Node, end: Node, draw, diagonal
+    grid: List[List[Node]], start: Node, end: Node, draw, diagonal, animations
 ):
     """Doesn't care about weighted maze and gives shortest path"""
     for i in grid:
@@ -17,7 +17,8 @@ def breadth_first_search(
                 and not node.is_weighted()
             ):
                 node.reset()
-        draw()
+        if animations:
+            draw()
     queue = deque([start])
     visited = {(start.row, start.col): None}
     while queue:
@@ -38,7 +39,8 @@ def breadth_first_search(
             for i in path[1 : len(path) - 1]:
                 if not i.is_weighted():
                     i.make_path()
-                draw()
+                if animations:
+                    draw()
             print(
                 f"Breadth First Search\nPath Length: {len(path)}\nTotal Nodes Visited: {len(visited)}\n"
             )
@@ -53,4 +55,5 @@ def breadth_first_search(
                     i.make_will_visit()
                 queue.append(i)
                 visited[(i.row, i.col)] = (x, y)
-        draw()
+        if animations:
+            draw()

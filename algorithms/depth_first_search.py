@@ -3,7 +3,9 @@ from typing import List
 from maze.maze import Node
 
 
-def depth_first_search(grid: List[List[Node]], start: Node, end: Node, draw, diagonal):
+def depth_first_search(
+    grid: List[List[Node]], start: Node, end: Node, draw, diagonal, animations
+):
     """Doesn't care about weighted maze and doesn't gives shortest path"""
     for i in grid:
         for node in i:
@@ -14,7 +16,8 @@ def depth_first_search(grid: List[List[Node]], start: Node, end: Node, draw, dia
                 and not node.is_weighted()
             ):
                 node.reset()
-        draw()
+        if animations:
+            draw()
     stack = [start]
     visited = {(start.row, start.col): None}
     while stack:
@@ -35,7 +38,8 @@ def depth_first_search(grid: List[List[Node]], start: Node, end: Node, draw, dia
             for i in path[1 : len(path) - 1]:
                 if not i.is_weighted():
                     i.make_path()
-                draw()
+                if animations:
+                    draw()
             print(
                 f"Depth First Search\nPath Length: {len(path)}\nTotal Nodes Visited: {len(visited)}\n"
             )
@@ -50,4 +54,5 @@ def depth_first_search(grid: List[List[Node]], start: Node, end: Node, draw, dia
                     i.make_will_visit()
                 stack.append(i)
                 visited[(i.row, i.col)] = (x, y)
-        draw()
+        if animations:
+            draw()

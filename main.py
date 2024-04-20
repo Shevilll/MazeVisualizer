@@ -1,20 +1,27 @@
 import pygame
 
+# Todo
+# Implement Travelling Salesman Problem
+
 # Help
-# Press Escape to break animation
+
 # Press d for Depth First Search
 # Press b for Breadth First Search
-# Press c to clear the display
-# Left Click to place Nodes
-# Right Click to remove Nodes
-# Press r to generate random maze of barriers
 # Press g for greedy best first search
 # Press a for astar
+# Press j for dijkstra
+
+# Left Click to place Nodes
+# Right Click to remove Nodes
+
+# Press Escape to break animation
+# Press c to clear the display
+# Press r to generate random maze of barriers
 # Press 1 to off/on walls
 # Press 2 to off/on water
 # Press 3 to off/on deepwater
 # Press spacebar to off/on diagonal_neighbours
-# Press j for dijkstra
+# Press x to turn off/on animations
 
 # window settings
 WIDTH = 800
@@ -38,6 +45,7 @@ def main():
     water = False
     deepwater = False
     diagonal = False
+    animations = True
 
     run = True
     while run:
@@ -49,7 +57,7 @@ def main():
                 row, col = get_clicked_pos(pos, total_rows, total_cols, WIDTH, HEIGHT)
                 node: Node = grid[row][col]
 
-                if not start:
+                if not start and node != end:
                     node.make_start()
                     start = node
 
@@ -75,6 +83,8 @@ def main():
                     end = None
 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_x:
+                    animations = not animations
                 if event.key == pygame.K_SPACE:
                     diagonal = not diagonal
 
@@ -132,6 +142,7 @@ def main():
                         end,
                         lambda: draw(total_rows, total_cols, grid),
                         diagonal,
+                        animations,
                     )
                 if event.key == pygame.K_b and start and end:
                     from algorithms.breadth_first_search import breadth_first_search
@@ -142,6 +153,7 @@ def main():
                         end,
                         lambda: draw(total_rows, total_cols, grid),
                         diagonal,
+                        animations,
                     )
 
                 if event.key == pygame.K_g and start and end:
@@ -155,6 +167,7 @@ def main():
                         end,
                         lambda: draw(total_rows, total_cols, grid),
                         diagonal,
+                        animations,
                     )
                 if event.key == pygame.K_a and start and end:
                     from algorithms.astar import astar
@@ -165,6 +178,7 @@ def main():
                         end,
                         lambda: draw(total_rows, total_cols, grid),
                         diagonal,
+                        animations,
                     )
                 if event.key == pygame.K_j and start and end:
                     from algorithms.dijkstra import dijkstra
@@ -175,6 +189,7 @@ def main():
                         end,
                         lambda: draw(total_rows, total_cols, grid),
                         diagonal,
+                        animations,
                     )
         draw(total_rows, total_cols, grid)
     pygame.quit()
